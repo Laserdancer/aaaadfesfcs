@@ -1,16 +1,94 @@
-#include <DS1302.h>  // Incluyendo la librería
-    DS1302 rtc(9, 5, 6);  // RST/CE, DAT/I/O, CLK/SCLK - Interfaz de 3 cables
-    Time t;  // Define una estructura de nombre t de la clase Time
-    void setup()
-    {
-      rtc.halt(false);  // Limpia la bandera CH
-      rtc.writeProtect(false);  // Limpia el bit WP para poder escribir en el dispositivo
-      rtc.setDOW(3);  // Configurar día de la semana (1-7): MIERCOLES
-      rtc.setTime(10, 15, 0);  // Configurar hora en formato 24hrs: 10:15:00
-      rtc.setDate(14, 1, 2015);  // Configurar fecha en formato dia/mes/año: 14/Ene/2015
-      rtc.setTCR(TCR_D2R2K);  // Activa carga de mantenimiento con 2 diodos y la resistencia de 2k
-    }
-    void loop()
-    {
-      digitalWrite(13,HIGH);  // El LED integrado confirmara la finalización
+#include <DS1302.h> 
+DS1302 rtc(9, 5, 6); //[ RST / CE , DAT / I/O , CLK/SCLK ] 
+Time t; 
+void setup()   {  
+Serial.begin(115200);
+               } 
+void loop() {
+int AMPM; //0 AM, 1 PM
+t = rtc.getTime(); //Obteniendo fecha actual
+if (t.dow == 1) Serial.print("Lun");
+if (t.dow == 2) Serial.print("Mar");
+if (t.dow == 3) Serial.print("Mie");
+if (t.dow == 4) Serial.print("Jue");
+if (t.dow == 5) Serial.print("Vie");
+if (t.dow == 6) Serial.print("Sab");
+if (t.dow == 7) Serial.print("Dom"); 
+Serial.print(" ");
+Serial.print(t.date, DEC);
+Serial.print("/");
+if (t.mon == 1) Serial.print("Ene"); 
+if (t.mon == 2) Serial.print("Feb"); 
+if (t.mon == 3) Serial.print("Mar"); 
+if (t.mon == 4) Serial.print("Abr"); 
+if (t.mon == 5) Serial.print("May"); 
+if (t.mon == 6) Serial.print("Jun"); 
+if (t.mon == 7) Serial.print("Jul"); 
+if (t.mon == 8) Serial.print("Ago"); 
+if (t.mon == 9) Serial.print("Sep"); 
+if (t.mon == 10) Serial.print("Oct"); 
+if (t.mon == 11) Serial.print("Nov"); 
+if (t.mon == 12) Serial.print("Dic"); 
+Serial.print("/");
+Serial.print(t.year, DEC);
+Serial.print(" -- ");
+switch(t.hour)
+{
+  case 0: Serial.print("12"); AMPM=0; break;
+  case 23: Serial.print("11"); AMPM=1; break;
+  case 22: Serial.print("10"); AMPM=1; break;
+  case 21: Serial.print("9"); AMPM=1;  break;
+  case 20: Serial.print("8"); AMPM=1;  break;
+  case 19: Serial.print("7"); AMPM=1;  break;
+  case 18: Serial.print("6"); AMPM=1;  break;
+  case 17: Serial.print("5"); AMPM=1;  break;
+  case 16: Serial.print("4"); AMPM=1;  break;
+  case 15: Serial.print("3"); AMPM=1;  break;
+  case 14: Serial.print("2"); AMPM=1;  break;
+  case 13: Serial.print("1"); AMPM=1;  break;
+  case 12: Serial.print("12"); AMPM=1; break;
+  default: 
+  AMPM=0;
+  Serial.print(t.hour, DEC);
+}
+Serial.print(":");
+switch(t.min)
+{
+  case 0: Serial.print("00"); break;
+  case 1: Serial.print("01"); break;
+  case 2: Serial.print("02"); break;
+  case 3: Serial.print("03"); break;
+  case 4: Serial.print("04"); break;
+  case 5: Serial.print("05"); break;
+  case 6: Serial.print("06"); break;
+  case 7: Serial.print("07"); break;
+  case 8: Serial.print("08"); break;
+  case 9: Serial.print("09"); break;
+  default: Serial.print(t.min, DEC);
+}
+Serial.print(":");
+switch(t.sec)
+{
+  case 0: Serial.print("00"); break;
+  case 1: Serial.print("01"); break;
+  case 2: Serial.print("02"); break;
+  case 3: Serial.print("03"); break;
+  case 4: Serial.print("04"); break;
+  case 5: Serial.print("05"); break;
+  case 6: Serial.print("06"); break;
+  case 7: Serial.print("07"); break;
+  case 8: Serial.print("08"); break;
+  case 9: Serial.print("09"); break;
+  default: Serial.print(t.sec, DEC);
+}
+if(AMPM==0)
+{
+  Serial.print(" AM");
+}
+else if (AMPM==1)
+{
+  Serial.print(" PM");
+}
+Serial.println();
+delay(1000);
     }
