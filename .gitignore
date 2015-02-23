@@ -1,13 +1,13 @@
-#include <DS1302.h> 
-DS1302 rtc(9, 5, 6); //[ RST / CE , DAT / I/O , CLK/SCLK ] 
-Time t; 
+#include <DS1302.h>  // Incluyendo la librería
+DS1302 rtc(9, 5, 6);  // RST/CE, DAT/I/O, CLK/SCLK - Interfaz de 3 cables 
+Time t;  // Define una estructura de nombre t de la clase Time 
 void setup()   {  
-Serial.begin(115200);
+Serial.begin(115200);  // Iniciando el puerto serial, velocidad de datos: 115200 bps
                } 
 void loop() {
-int AMPM; //0 AM, 1 PM
-t = rtc.getTime(); //Obteniendo fecha actual
-if (t.dow == 1) Serial.print("Lun");
+int AMPM;  // Indicador de AM/PM : 0 AM, 1 PM
+t = rtc.getTime();  // Obteniendo fecha y hora actual
+if (t.dow == 1) Serial.print("Lun");  // Mensaje según el día de la semana
 if (t.dow == 2) Serial.print("Mar");
 if (t.dow == 3) Serial.print("Mie");
 if (t.dow == 4) Serial.print("Jue");
@@ -15,9 +15,9 @@ if (t.dow == 5) Serial.print("Vie");
 if (t.dow == 6) Serial.print("Sab");
 if (t.dow == 7) Serial.print("Dom"); 
 Serial.print(" ");
-Serial.print(t.date, DEC);
+Serial.print(t.date, DEC);  // Fecha del mes
 Serial.print("/");
-if (t.mon == 1) Serial.print("Ene"); 
+if (t.mon == 1) Serial.print("Ene");  // Mensaje según el mes del año 
 if (t.mon == 2) Serial.print("Feb"); 
 if (t.mon == 3) Serial.print("Mar"); 
 if (t.mon == 4) Serial.print("Abr"); 
@@ -30,12 +30,12 @@ if (t.mon == 10) Serial.print("Oct");
 if (t.mon == 11) Serial.print("Nov"); 
 if (t.mon == 12) Serial.print("Dic"); 
 Serial.print("/");
-Serial.print(t.year, DEC);
+Serial.print(t.year, DEC);  // Año
 Serial.print(" -- ");
 switch(t.hour)
 {
-  case 0: Serial.print("12"); AMPM=0; break;
-  case 23: Serial.print("11"); AMPM=1; break;
+  case 0: Serial.print("12"); AMPM=0; break;  // Cambio de formato 24h a 12h
+  case 23: Serial.print("11"); AMPM=1; break;  // Mensaje según la hora
   case 22: Serial.print("10"); AMPM=1; break;
   case 21: Serial.print("9"); AMPM=1;  break;
   case 20: Serial.print("8"); AMPM=1;  break;
@@ -54,22 +54,22 @@ switch(t.hour)
 Serial.print(":");
 switch(t.min)
 {
-  case 0: Serial.print("00"); break;
-  case 1: Serial.print("01"); break;
-  case 2: Serial.print("02"); break;
-  case 3: Serial.print("03"); break;
-  case 4: Serial.print("04"); break;
-  case 5: Serial.print("05"); break;
-  case 6: Serial.print("06"); break;
-  case 7: Serial.print("07"); break;
-  case 8: Serial.print("08"); break;
-  case 9: Serial.print("09"); break;
+  case 0: Serial.print("00"); break;  // Si minutos < 10, se agrega un 0
+  case 1: Serial.print("01"); break;  // al inicio. Esto debido a que el
+  case 2: Serial.print("02"); break;  // tipo de dato es uint8_t y para
+  case 3: Serial.print("03"); break;  // los números menores que 10,
+  case 4: Serial.print("04"); break;  // muestra sólo un digito.
+  case 5: Serial.print("05"); break;  // Ejemplo: si t.min=6, al imprimir
+  case 6: Serial.print("06"); break;  // el valor de t.min veremos sólo "6"
+  case 7: Serial.print("07"); break;  // y para darle una buena presentación
+  case 8: Serial.print("08"); break;  // decidimos anteceder un 0 y así
+  case 9: Serial.print("09"); break;  // el dato que se muestre sea "06"
   default: Serial.print(t.min, DEC);
 }
 Serial.print(":");
 switch(t.sec)
 {
-  case 0: Serial.print("00"); break;
+  case 0: Serial.print("00"); break;  // Segundos, mismo caso que los minutos
   case 1: Serial.print("01"); break;
   case 2: Serial.print("02"); break;
   case 3: Serial.print("03"); break;
@@ -81,7 +81,7 @@ switch(t.sec)
   case 9: Serial.print("09"); break;
   default: Serial.print(t.sec, DEC);
 }
-if(AMPM==0)
+if(AMPM==0)  // Se agrega un AM o PM según corresponda
 {
   Serial.print(" AM");
 }
@@ -90,5 +90,5 @@ else if (AMPM==1)
   Serial.print(" PM");
 }
 Serial.println();
-delay(1000);
+delay(1000);  // Retardo de 1s en el loop para repetir esto cada segundo
     }
